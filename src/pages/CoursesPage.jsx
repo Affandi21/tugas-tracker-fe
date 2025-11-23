@@ -1,4 +1,3 @@
-// src/pages/CoursesPage.jsx
 import React, { useEffect, useState } from "react";
 import { ristekApi } from "../api/ristekApi";
 import CourseCard from "../components/CourseCard";
@@ -17,7 +16,6 @@ export default function CoursesPage() {
   });
   const [showForm, setShowForm] = useState(false);
 
-  // untuk dialog konfirmasi hapus
   const [pendingDeleteCourse, setPendingDeleteCourse] = useState(null);
 
   const fetchMatkul = async () => {
@@ -85,12 +83,10 @@ export default function CoursesPage() {
     setShowForm(true);
   };
 
-  // buka dialog konfirmasi hapus
   const handleAskDeleteCourse = (course) => {
     setPendingDeleteCourse(course);
   };
 
-  // benar-benar menghapus setelah user klik "Hapus"
   const handleConfirmDeleteCourse = async () => {
     if (!pendingDeleteCourse) return;
     try {
