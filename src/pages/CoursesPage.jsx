@@ -130,7 +130,7 @@ export default function CoursesPage() {
               </h1>
               <p className="mt-2 text-sm md:text-base text-slate-400 max-w-xl">
                 Tambahkan mata kuliah, lihat jumlah tugas, dan pantau progres
-                semester dengan tampilan yang rapi dan fokus.
+                semester kamu.
               </p>
             </div>
 
