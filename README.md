@@ -80,7 +80,7 @@
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/USERNAME/tugas-tracker-fe.git
+git clone https://github.com/Affandi21/tugas-tracker-fe.git
 cd tugas-tracker-fe
 ```
 
@@ -307,8 +307,7 @@ Create a `.env` file with:
 # API Configuration
 VITE_API_BASE_URL=http://localhost:5000/api
 
-# Optional: For production
-# VITE_API_BASE_URL=https://your-backend-url.com/api
+
 ```
 
 **⚠️ Important:** 
