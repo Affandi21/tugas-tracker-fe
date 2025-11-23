@@ -1,3 +1,4 @@
+// src/components/CourseCard.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,7 +9,6 @@ import {
   faPen,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-
 
 const GRADIENT_COLORS = [
   "from-emerald-400 to-green-500",
@@ -32,7 +32,6 @@ export default function CourseCard({ course, onEdit, onDelete, index }) {
 
   const progress = tugasCount > 0 ? (completedTasks / tugasCount) * 100 : 0;
 
-  // Pilih gradient
   const gradientIndex =
     typeof index === "number"
       ? index % GRADIENT_COLORS.length
@@ -132,7 +131,7 @@ export default function CourseCard({ course, onEdit, onDelete, index }) {
               />
             </button>
             <button
-              onClick={() => onDelete(course.id)}
+              onClick={() => onDelete(course)}
               className="px-3 py-2.5 glass rounded-xl hover:bg-red-500/20 transition-all group/btn flex items-center justify-center"
               title="Delete"
             >

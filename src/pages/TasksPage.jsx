@@ -6,6 +6,8 @@ import GradeCalculator from "../components/GradeCalculator";
 import "../styles/tasks.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
+import ConfirmDialog from "../components/ConfirmDialog";
+
 
 export default function TasksPage() {
   const { courseId } = useParams();
@@ -20,6 +22,7 @@ export default function TasksPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [filterStatus, setFilterStatus] = useState("ALL");
+  const [pendingDeleteId, setPendingDeleteId] = useState(null);
 
   const loadData = async () => {
     try {
@@ -95,17 +98,23 @@ export default function TasksPage() {
     }
   };
 
-  const handleDeleteTask = async (id) => {
-    if (!window.confirm("Hapus tugas ini?")) return;
-    try {
-      setError("");
-      await ristekApi.deleteTugas(id);
-      await loadData();
-    } catch (err) {
-      console.error(err);
-      setError(err.message || "Gagal menghapus tugas");
-    }
-  };
+  const handleAskDeleteTask = (id) => {
+  setPendingDeleteId(id);
+};
+
+const handleConfirmDeleteTask = async () => {
+  if (!pendingDeleteId) return;
+  try {
+    setError("");
+    await ristekApi.deleteTugas(pendingDeleteId);
+    await loadData();
+  } catch (err) {
+    console.error(err);
+    setError(err.message || "Gagal menghapus tugas");
+  } finally {
+    setPendingDeleteId(null);
+  }
+};
 
   const filteredTasks =
     filterStatus === "ALL"
@@ -232,13 +241,19 @@ export default function TasksPage() {
               </h2>
               <button
                 onClick={() => setShowForm((v) => !v)}
-                className="text-xs text-slate-400 hover:text-slate-100 flex items-center justify-center w-7 h-7 rounded-full border border-slate-600/60 hover:border-slate-300/80"
+                className={`text-xs flex items-center justify-center w-7 h-7 rounded-full border transition
+                  ${
+                    showForm
+                      ? "border-slate-600/60 text-slate-300 bg-transparent hover:border-slate-300/80 hover:text-slate-100"
+                      : "border-sky-500/80 bg-sky-500 text-white hover:bg-sky-400 hover:border-sky-400"
+                  }`}
               >
                 <FontAwesomeIcon
                   icon={showForm ? faMinus : faPlus}
                   className="text-[11px]"
                 />
               </button>
+
             </div>
 
             {showForm && (
@@ -252,7 +267,7 @@ export default function TasksPage() {
                     value={form.nama}
                     onChange={handleChange}
                     className="w-full rounded-lg border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-slate-50 placeholder:text-slate-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
-                    placeholder="Contoh: Tugas 1 SQL, kuis, UTS, dsb."
+                    placeholder="Contoh: Tugas, kuis, UTS, dsb."
                     required
                   />
                 </div>
@@ -324,13 +339,23 @@ export default function TasksPage() {
                   key={task.id}
                   task={task}
                   onUpdateStatus={handleUpdateStatus}
-                  onDelete={handleDeleteTask}
+                  onDelete={handleAskDeleteTask}
                 />
               ))}
             </div>
           )}
         </section>
       </div>
+      <ConfirmDialog
+        open={pendingDeleteId !== null}
+        title="Hapus tugas?"
+        message="Apakah kamu yakin ingin menghapus tugas ini? Tindakan ini tidak dapat dibatalkan."
+        confirmLabel="Hapus"
+        cancelLabel="Batal"
+        onConfirm={handleConfirmDeleteTask}
+        onCancel={() => setPendingDeleteId(null)}
+      />
     </div>
+    
   );
 }

@@ -1,7 +1,9 @@
+// src/pages/CoursesPage.jsx
 import React, { useEffect, useState } from "react";
 import { ristekApi } from "../api/ristekApi";
 import CourseCard from "../components/CourseCard";
 import "../styles/courses.css";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 export default function CoursesPage() {
   const [matkulList, setMatkulList] = useState([]);
@@ -14,6 +16,9 @@ export default function CoursesPage() {
     sks: 3,
   });
   const [showForm, setShowForm] = useState(false);
+
+  // untuk dialog konfirmasi hapus
+  const [pendingDeleteCourse, setPendingDeleteCourse] = useState(null);
 
   const fetchMatkul = async () => {
     try {
@@ -80,15 +85,23 @@ export default function CoursesPage() {
     setShowForm(true);
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Yakin ingin menghapus mata kuliah ini?")) return;
+  // buka dialog konfirmasi hapus
+  const handleAskDeleteCourse = (course) => {
+    setPendingDeleteCourse(course);
+  };
+
+  // benar-benar menghapus setelah user klik "Hapus"
+  const handleConfirmDeleteCourse = async () => {
+    if (!pendingDeleteCourse) return;
     try {
       setError("");
-      await ristekApi.deleteMatkul(id);
+      await ristekApi.deleteMatkul(pendingDeleteCourse.id);
       await fetchMatkul();
     } catch (err) {
       console.error(err);
       setError(err.message || "Gagal menghapus mata kuliah");
+    } finally {
+      setPendingDeleteCourse(null);
     }
   };
 
@@ -279,18 +292,33 @@ export default function CoursesPage() {
             </div>
           ) : (
             <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {matkulList.map((course) => (
+              {matkulList.map((course, index) => (
                 <CourseCard
                   key={course.id}
                   course={course}
-                  onEdit={() => handleEdit(course)}
-                  onDelete={() => handleDelete(course.id)}
+                  onEdit={handleEdit}
+                  onDelete={handleAskDeleteCourse}
                 />
               ))}
             </div>
           )}
         </section>
       </div>
+
+      {/* Dialog konfirmasi hapus mata kuliah */}
+      <ConfirmDialog
+        open={!!pendingDeleteCourse}
+        title="Hapus mata kuliah?"
+        message={
+          pendingDeleteCourse
+            ? `Apakah kamu yakin ingin menghapus mata kuliah "${pendingDeleteCourse.nama}" beserta seluruh tugasnya?`
+            : ""
+        }
+        confirmLabel="Hapus"
+        cancelLabel="Batal"
+        onConfirm={handleConfirmDeleteCourse}
+        onCancel={() => setPendingDeleteCourse(null)}
+      />
     </div>
   );
 }
