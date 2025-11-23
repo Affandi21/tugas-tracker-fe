@@ -1,13 +1,11 @@
-const API_BASE_URL = "https://pekris-webdev.vercel.app/api";
-const API_KEY = import.meta.env.VITE_API_KEY;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
-// Helper umum untuk panggil API dengan Bearer Token
+// Helper umum untuk panggil API
 async function apiFetch(path, options = {}) {
   const url = `${API_BASE_URL}${path}`;
 
   const headers = {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${API_KEY}`,
     ...(options.headers || {}),
   };
 
@@ -38,7 +36,7 @@ function withQuery(path, params = {}) {
 }
 
 export const ristekApi = {
-  // ---------- MATA KULIAH ----------
+  // MATA KULIAH
   getMatkul({ include } = {}) {
     return apiFetch(withQuery("/matkul", { include }), { method: "GET" });
   },
@@ -75,7 +73,7 @@ export const ristekApi = {
     return apiFetch(`/matkul/${id}`, { method: "DELETE" });
   },
 
-  // ---------- TUGAS ----------
+  // TUGAS
   getTugas(filter = {}) {
     return apiFetch(withQuery("/tugas", filter), { method: "GET" });
   },

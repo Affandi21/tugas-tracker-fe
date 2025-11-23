@@ -1,15 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg-primary: #0f0f23;
+  --bg-secondary: #1a1a2e;
+  --bg-tertiary: #16213e;
+  --accent-pink: #ff006e;
+  --accent-blue: #00d4ff;
+  --accent-purple: #8b5cf6;
+  --accent-yellow: #ffd60a;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0c0;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  background-color: #f3f4f6;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
   min-height: 100vh;
+  position: relative;
+}
+
+/* Animated Background Blobs */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+  z-index: 0;
+  animation: float 20s infinite ease-in-out;
+}
+
+body::before {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--accent-pink) 0%, transparent 70%);
+  top: -200px;
+  right: -200px;
+  animation-delay: 0s;
+}
+
+body::after {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--accent-blue) 0%, transparent 70%);
+  bottom: -150px;
+  left: -150px;
+  animation-delay: 5s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(50px, -50px) scale(1.1); }
+  66% { transform: translate(-30px, 30px) scale(0.9); }
+}
+
+/* Glassmorphism utility classes */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+}
+
+/* Selection */
+::selection {
+  background: var(--accent-pink);
+  color: white;
+}
+
+/* Smooth animations */
+* {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button,
+a {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Loading animation */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Neon glow effect */
+.neon-glow {
+  box-shadow: 0 0 20px rgba(255, 0, 110, 0.5),
+              0 0 40px rgba(255, 0, 110, 0.3),
+              0 0 60px rgba(255, 0, 110, 0.1);
+}
+
+.neon-glow-blue {
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.5),
+              0 0 40px rgba(0, 212, 255, 0.3),
+              0 0 60px rgba(0, 212, 255, 0.1);
 }
